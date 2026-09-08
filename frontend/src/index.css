@@ -3160,6 +3160,183 @@ textarea {
   font-size: 0.87rem;
 }
 
+.home-distribution {
+  margin: 3rem 0 1.5rem;
+}
+
+.distribution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.distribution-card {
+  padding: 1.35rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.7rem;
+  background: hsl(var(--card));
+}
+
+.distribution-card > svg {
+  color: hsl(var(--primary));
+  margin-bottom: 0.75rem;
+}
+
+.distribution-card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.distribution-pkg {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: hsl(var(--primary));
+  margin: 0 0 0.65rem;
+}
+
+.distribution-card p:last-child {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.proof-section {
+  margin-top: 4rem;
+}
+
+.proof-section h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.proof-section-lede {
+  max-width: 44rem;
+  margin: 0.6rem 0 1.6rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.proof-accent-icon {
+  color: hsl(var(--primary));
+  flex-shrink: 0;
+}
+
+.proof-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.proof-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.proof-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.proof-card {
+  padding: 1.35rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.7rem;
+  background: hsl(var(--card));
+}
+
+.proof-card > svg {
+  color: hsl(var(--primary));
+  margin-bottom: 0.75rem;
+}
+
+.proof-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.proof-card p {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.proof-test-ref {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.proof-test-ref code {
+  color: hsl(var(--foreground));
+  font-size: 0.8rem;
+}
+
+.proof-stat-card {
+  padding: 1.35rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.7rem;
+  background: hsl(var(--card));
+  display: flex;
+  flex-direction: column;
+}
+
+.proof-stat-value {
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  font-weight: 800;
+  color: hsl(var(--primary));
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.proof-stat-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 0.5rem;
+}
+
+.proof-stat-desc {
+  font-size: 0.84rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.45;
+  margin: 0 0 auto;
+}
+
+.proof-stat-target {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.76rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.proof-dl {
+  margin: 0.8rem 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.84rem;
+}
+
+.proof-dl dt {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.proof-dl dd {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+}
+
 @media (max-width: 900px) {
   .site-header-inner {
     flex-wrap: wrap;
@@ -3185,6 +3362,12 @@ textarea {
   }
 
   .tool-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .distribution-grid,
+  .proof-grid-3,
+  .proof-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -3238,6 +3421,10 @@ textarea {
   }
 
   .tool-card-grid,
+  .distribution-grid,
+  .proof-grid-2,
+  .proof-grid-3,
+  .proof-grid-4,
   .workflow-map,
   .screen-grid {
     grid-template-columns: 1fr;
