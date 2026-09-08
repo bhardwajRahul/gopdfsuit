@@ -1,6 +1,6 @@
 
 import { lazy, Suspense } from 'react'
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import AuthGuard from './components/AuthGuard'
 import SiteFooter from './components/site/SiteFooter'
 import SiteHeader from './components/site/SiteHeader'
@@ -16,7 +16,6 @@ const Compress = lazy(() => import('./pages/Compress'))
 const Filler = lazy(() => import('./pages/Filler'))
 const HtmlToPdf = lazy(() => import('./pages/HtmlToPdf'))
 const HtmlToImage = lazy(() => import('./pages/HtmlToImage'))
-const Screenshots = lazy(() => import('./pages/Screenshots'))
 const Comparison = lazy(() => import('./pages/Comparison'))
 const Redaction = lazy(() => import('./pages/Redaction'))
 
@@ -60,8 +59,9 @@ function AppLayout() {
             <Route path="/filler" element={<Filler />} />
             <Route path="/htmltopdf" element={<HtmlToPdf />} />
             <Route path="/htmltoimage" element={<HtmlToImage />} />
-            <Route path="/screenshots" element={<Screenshots />} />
-            <Route path="/comparison" element={<Comparison />} />
+            <Route path="/screenshots" element={<Navigate to="/benchmarks" replace />} />
+            <Route path="/comparison" element={<Navigate to="/benchmarks" replace />} />
+            <Route path="/benchmarks" element={<Comparison />} />
             <Route path="/redact" element={<Redaction />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
