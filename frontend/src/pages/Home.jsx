@@ -47,7 +47,7 @@ const Home = () => {
           <div>
             <h2 id="tool-catalogue-title">Tools and workspaces</h2>
           </div>
-          <Link className="text-link" to="/comparison">See verified proof <ArrowRight aria-hidden="true" size={16} /></Link>
+          <Link className="text-link" to="/benchmarks">View benchmarks <ArrowRight aria-hidden="true" size={16} /></Link>
         </div>
         {toolGroups.map((group) => (
           <section className="tool-group" key={group.title} aria-labelledby={`${group.title}-tools`}>
@@ -73,7 +73,7 @@ const Home = () => {
           <p>Review throughput benchmarks, template caching data, and execution boundaries.</p>
         </div>
         <div className="proof-actions">
-          <Link className="button button-secondary" to="/comparison">See proof</Link>
+          <Link className="button button-secondary" to="/benchmarks">View benchmarks</Link>
         </div>
       </section>
     </div>

@@ -15,7 +15,7 @@ export default function SiteFooter() {
         <div className="site-footer-links" aria-label="Footer navigation">
           <Link to="/editor">Editor</Link>
           <Link to="/viewer">Template preview</Link>
-          <Link to="/comparison">Product proof</Link>
+          <Link to="/benchmarks">Benchmarks</Link>
           <a href="https://github.com/chinmay-sawant/gopdfsuit" rel="noreferrer" target="_blank">
             Repository <ExternalLink aria-hidden="true" size={13} />
           </a>

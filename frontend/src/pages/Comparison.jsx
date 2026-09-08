@@ -5,7 +5,7 @@ const benchmarks = [
   {
     value: '6,611 ops/s',
     label: 'Cached compliant peak',
-    detail: 'Zerodha financial statement generation with template caching, full PDF/A-4, PDF/UA-2 tagging, and ECDSA P-256 signing.',
+    detail: 'Zerodha statement generation with template caching, full PDF/A-4, PDF/UA-2 tagging, and ECDSA P-256 signing across mixed trade tiers.',
     target: 'bench-gopdflib-zerodha',
   },
   {
@@ -23,7 +23,7 @@ const benchmarks = [
   {
     value: '7,515 req/s',
     label: 'HTTP REST throughput',
-    detail: 'HTTP API throughput via Gin server using pooled Sonic JSON deserializers under retail load.',
+    detail: 'HTTP API throughput via Gin server using pooled Sonic JSON deserializers, measured with contract note payloads.',
     target: 'bench-k6-retail',
   },
 ]
@@ -103,7 +103,7 @@ export default function Comparison() {
         <div className="section-heading-row">
           <div>
             <h2 id="benchmarks-heading">Measured throughput</h2>
-            <p className="proof-section-lede">Numbers from dated test runs on Intel i7-13700HX, Go 1.26.4 (best of 5 runs). Note that peak numbers reflect template caching enabled. Without caching, generation throughput is around 2,000 to 3,000 ops/s.</p>
+            <p className="proof-section-lede">Numbers from dated test runs on Intel i7-13700HX, Go 1.26.4 (best of 5 runs). Peak numbers reflect template caching enabled (uncached baseline is around 2,000 to 3,000 ops/s), evaluated across contract note and trade statement payloads.</p>
           </div>
           <Zap aria-hidden="true" className="proof-accent-icon" size={28} />
         </div>

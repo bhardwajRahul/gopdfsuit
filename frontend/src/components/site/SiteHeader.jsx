@@ -43,7 +43,7 @@ export default function SiteHeader() {
               </div>
             </details>
             <NavLink className={navClass} onClick={closeToolMenu} to="/editor">Editor</NavLink>
-            <NavLink className={navClass} onClick={closeToolMenu} to="/comparison">Proof</NavLink>
+            <NavLink className={navClass} onClick={closeToolMenu} to="/benchmarks">Benchmarks</NavLink>
           </nav>
           <div className="site-header-actions">
             <button aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'} className="icon-button" onClick={toggle} type="button">

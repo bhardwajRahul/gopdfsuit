@@ -59,8 +59,9 @@ function AppLayout() {
             <Route path="/filler" element={<Filler />} />
             <Route path="/htmltopdf" element={<HtmlToPdf />} />
             <Route path="/htmltoimage" element={<HtmlToImage />} />
-            <Route path="/screenshots" element={<Navigate to="/comparison" replace />} />
-            <Route path="/comparison" element={<Comparison />} />
+            <Route path="/screenshots" element={<Navigate to="/benchmarks" replace />} />
+            <Route path="/comparison" element={<Navigate to="/benchmarks" replace />} />
+            <Route path="/benchmarks" element={<Comparison />} />
             <Route path="/redact" element={<Redaction />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
