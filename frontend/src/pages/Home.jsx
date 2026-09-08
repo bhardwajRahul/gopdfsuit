@@ -19,7 +19,7 @@ const Home = () => {
       </section>
 
       <section className="home-distribution" aria-labelledby="distribution-title">
-        <h2 className="sr-only" id="distribution-title">Distribution modes</h2>
+        <h2 id="distribution-title">Distribution modes</h2>
         <div className="distribution-grid">
           <article className="distribution-card">
             <Cpu aria-hidden="true" size={22} strokeWidth={1.7} />
