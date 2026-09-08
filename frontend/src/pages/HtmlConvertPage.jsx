@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Globe, FileText, Image as ImageIcon, RefreshCw, Eye, Settings } from 'lucide-react'
+import { AlertCircle, Globe, FileText, Image as ImageIcon, RefreshCw, Eye, Settings } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { usePdfOperation } from '../hooks/usePdfOperation'
-import { htmlToPDFViaWasm, htmlToImageViaWasm, htmlURLToPDFViaWasm, htmlURLToImageViaWasm } from '../utils/wasm/html.js'
+import { htmlToPDFViaWasm, htmlToImageViaWasm } from '../utils/wasm/html.js'
 import OperationShell from '../components/OperationShell'
 import OpPageShell from '../components/OpPageShell'
 import ConsentBanner from '../components/ConsentBanner'
@@ -25,7 +25,6 @@ const IMAGE_DEFAULTS = { format: 'png', width: 800, height: 600, quality: 94 }
 const HtmlConvertPage = ({ mode = 'pdf' }) => {
   const isPdf = mode !== 'image'
   const [htmlContent, setHtmlContent] = useState('')
-  const [url, setUrl] = useState('')
   const [inputType, setInputType] = useState('html')
   const [showPreview, setShowPreview] = useState(false)
   const { getAuthHeaders, triggerLogin } = useAuth()
@@ -43,30 +42,13 @@ const HtmlConvertPage = ({ mode = 'pdf' }) => {
   const sampleHtml = isPdf ? SAMPLE_HTML_PDF : SAMPLE_HTML_IMAGE
 
   const convert = async () => {
-    // WASM-first for both tabs (offline-capable, no upload). The URL tab
-    // fetches from WASM, so it is CORS-gated: browser fetch fails for
-    // sites without CORS headers, and then the consent banner below
-    // offers the server fetch instead. Nothing uploads silently.
-    if ((!htmlContent.trim() && inputType === 'html') || (!url.trim() && inputType === 'url')) return
+    // In-browser WASM converts HTML strings directly.
+    // URL conversion is disabled in the browser due to CORS restrictions
+    // and is supported directly via pkg/gopdflib and the backend service.
+    if (inputType === 'url' || !htmlContent.trim()) return
     setFallbackOffer(null)
-    if (inputType === 'html') {
-      const viaWasm = isPdf ? htmlToPDFViaWasm(htmlContent, config) : htmlToImageViaWasm(htmlContent, config)
-      await runLocal(() => viaWasm, { filename, autoDownload: false, mimeType })
-      return
-    }
-    let wasmMessage = ''
-    const pageUrl = url.trim()
-    const viaWasm = isPdf ? htmlURLToPDFViaWasm(pageUrl, config) : htmlURLToImageViaWasm(pageUrl, config)
-    const result = await runLocal(() => viaWasm, {
-      filename,
-      autoDownload: false,
-      mimeType,
-      onError: (message) => { wasmMessage = message },
-    })
-    if (result) return
-    if (getAuthHeaders) {
-      setFallbackOffer({ url: pageUrl, message: wasmMessage })
-    }
+    const viaWasm = isPdf ? htmlToPDFViaWasm(htmlContent, config) : htmlToImageViaWasm(htmlContent, config)
+    await runLocal(() => viaWasm, { filename, autoDownload: false, mimeType })
   }
 
   const convertViaServerConsent = async () => {
@@ -163,8 +145,27 @@ const HtmlConvertPage = ({ mode = 'pdf' }) => {
               <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.8rem', margin: '1rem 0 0' }}>Pure-Go engine: zoom and crop_* are no-ops and hidden. SVG output is not supported (png/jpg only).</p>
             </div>
           )}
-          <button onClick={convert} disabled={isLoading || (inputType === 'html' && !htmlContent.trim()) || (inputType === 'url' && !url.trim())} className="btn-glow" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '1rem 2rem' }}>
-            {isLoading ? <RefreshCw size={18} className="animate-spin" /> : <ActionIcon size={18} />}{isLoading ? (isPdf ? 'Converting to PDF…' : 'Converting to Image…') : (isPdf ? 'Convert to PDF' : 'Convert to Image')}
+          <button
+            onClick={convert}
+            disabled={isLoading || inputType === 'url' || (inputType === 'html' && !htmlContent.trim())}
+            className="btn-glow"
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              padding: '1rem 2rem',
+              opacity: inputType === 'url' ? 0.6 : 1,
+              cursor: inputType === 'url' ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {isLoading ? <RefreshCw size={18} className="animate-spin" /> : <ActionIcon size={18} />}
+            {inputType === 'url'
+              ? 'URL conversion disabled in browser'
+              : (isLoading
+                  ? (isPdf ? 'Converting to PDF…' : 'Converting to Image…')
+                  : (isPdf ? 'Convert to PDF' : 'Convert to Image'))}
           </button>
         </div>
 
@@ -190,12 +191,25 @@ const HtmlConvertPage = ({ mode = 'pdf' }) => {
             </div>
           ) : (
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--foreground))', fontWeight: '600', fontSize: '0.9rem' }}>Website URL:</label>
-              <input type="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://example.com" style={{ ...inputStyles, marginBottom: '1rem' }} />
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button onClick={() => setUrl('https://example.com')} className="btn-outline-glow" style={{ fontSize: '0.9rem', padding: '0.75rem 1rem' }}>Example.com</button>
-                <button onClick={() => setUrl('https://github.com/chinmay-sawant/gopdfsuit')} className="btn-outline-glow" style={{ fontSize: '0.9rem', padding: '0.75rem 1rem' }}>GitHub</button>
+              <div style={{ padding: '1rem 1.15rem', borderRadius: '8px', border: '1px solid hsl(var(--border))', background: 'rgba(255, 193, 7, 0.08)', marginBottom: '1.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#ffc107', fontWeight: '700', fontSize: '0.9rem' }}>
+                  <AlertCircle size={16} /> URL conversion disabled in browser
+                </div>
+                <p style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 0.75rem' }}>
+                  Web browsers execute this tool client-side via WebAssembly (WASM). Because browsers enforce strict CORS restrictions on outbound network calls made from web pages, arbitrary website URLs cannot be fetched directly in the browser.
+                </p>
+                <p style={{ color: 'hsl(var(--foreground))', fontSize: '0.85rem', lineHeight: '1.5', margin: 0, fontWeight: '600' }}>
+                  URL conversion is supported directly via the Go library (<code>pkg/gopdflib</code>) and backend service:
+                </p>
+                <pre style={{ background: 'rgba(0,0,0,0.3)', padding: '0.75rem', borderRadius: '6px', fontSize: '0.78rem', color: 'hsl(var(--foreground))', overflowX: 'auto', margin: '0.75rem 0 0' }}>
+                  <code>{isPdf
+                    ? '// Go library example:\npdfBytes, err := gopdflib.ConvertHTMLToPDF(gopdflib.HTMLToPDFRequest{\n    URL: "https://example.com",\n    PageSize: "A4",\n})'
+                    : '// Go library example:\nimgBytes, err := gopdflib.ConvertHTMLToImage(gopdflib.HTMLToImageRequest{\n    URL: "https://example.com",\n    Format: "png", Width: 800, Height: 600,\n})'}</code>
+                </pre>
               </div>
+
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'hsl(var(--muted-foreground))', fontWeight: '600', fontSize: '0.9rem' }}>Website URL (disabled in browser):</label>
+              <input type="url" value="" readOnly disabled placeholder="https://example.com (disabled due to browser CORS)" style={{ ...inputStyles, opacity: 0.6, cursor: 'not-allowed', marginBottom: '1rem' }} />
             </div>
           )}
           {showPreview && inputType === 'html' && htmlContent && (
